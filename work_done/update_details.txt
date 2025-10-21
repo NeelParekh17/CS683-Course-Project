@@ -1,0 +1,32 @@
+so let me note down all the changes we made so far
+
+in  micro_op_cache.h
+struct uop_cache_entry_t here added alternate_path_prefetch bit
+its made useful in same file in three functions:
+lookup(): here we unset alternate path bit on access
+insert(): here we changed the signature by adding parameter is_alternate_path,  what it does is if a line is found and active and request is prefetch of alternate path, then set alternate path bit else when line not found, find victim based on updated lru. set alternate path bit if request is prefetch of alternate path.
+evictlru_alternatepath(): checks any alternate path prefetches exist. find victim by prioritizing alternate path entries. if none then lru.
+
+
+in cache.h
+struct uop_mshr_entry here added is_alternate_path
+its made useful in ooo_cpu.cc in one function:
+increment_alternate_path(): here what we do is merge prefetch request with uop_mshr_entry(if exist) else create new uop_mshr_entry. Now we did a design choice: Even if one ip in a entry is of alternate path, we will mark the entire entry as of alternate path.
+
+struct prefetch_decode_entry here added is_alternate_path
+its made useful in cache.cc in one function:
+update_dib_from_prefetch(): prefetch instruction cache line comes from memory to uop cache mshr. here we will mark prefetch complete for that mshr entry. also for each ip inside that mshr entry line we will add to cache_pref_decode_buffer along with its alternate path value. 
+its also made useful in ooo_cpu.cc in one function:
+decode_prefetched_instruction(): consume from cache_pref_decode_buffer and fill into prf decode buffer
+
+in ooo_cpu.h
+struct prefetch_decode_entry here added is_alternate_path
+its used in ooo_cpu.cc in one function:
+decode_prefetched_instruction(): here we consume from prf decode buffer and insert in uop cache
+
+struct ip_pref_entry here added is_alternate_path
+its used in ooo_cpu.cc in two function:
+increment_alternate_path(): here what we do is merge prefetch request with uop_mshr_entry(if exist) else create new uop_mshr_entry. Now we did a design choice: Even if one ip in a entry is of alternate path, we will mark the entire entry as of alternate path.
+add_to_uop_queue_ip(): create a new entry and push to ips_to_prefetch queue
+
+

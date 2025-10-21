@@ -1,0 +1,10 @@
+make configclean
+make clean
+
+./config.sh champsim_config_original.json
+
+make -j$(nproc)
+
+./bin/champsim --warmup_instructions 1000 --simulation_instructions 1000 /home/neel/Desktop/assignments/architecture/ChampSimTraces/trace1.champsimtrace.xz
+
+./bin/champsim --warmup_instructions 1000000 --simulation_instructions 1000000 /home/neel/Desktop/assignments/architecture/ChampSimTraces/compute_fp_1.champsim.gz
