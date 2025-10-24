@@ -1,0 +1,247 @@
+Uop cache of sets 64 ways 8 window 32 Total entries 4096
+MRC with entries: 64 each having 64 instructiions 
+WARNING: physical memory size is smaller than virtual memory size
+Alternate TAGE_SC_L branch predictor! 
+ (TAGE 58165)  (LOOP 312)  (SC 8872)  (TOTAL 8 KB)  (TOTAL 8 KB)
+ Signal handler initialized
+Generating Output file in: ~/champsim_default_file_name.stats
+
+*** ChampSim Multicore Out-of-Order Simulator ***
+
+Warmup Instructions: 1000000
+Simulation Instructions: 1000000
+Number of CPUs: 1
+Page size: 4096
+
+CPU 0 Bimodal branch predictor
+Basic BTB sets: 4096 ways: 8 indirect buffer size: 4096 RAS size: 64
+cpu0_L1D IP-based stride prefetcher
+cpu0_L1I next line prefetcher
+Off-chip DRAM Size: 4 GiB Channels: 1 Width: 64-bit Data Rate: 3200 MT/s
+Clearning stats after warmup!!
+Warmup finished CPU 0 instructions: 1000003 cycles: 250110 cumulative IPC: 3.99826 (Simulation time: 0 hr 0 min 4 sec) 
+
+Warmup complete CPU 0 instructions: 1000003 cycles: 250110 (Simulation time: 0 hr 0 min 4 sec) 
+
+Simulation finished CPU 0 instructions: 1000001 cycles: 1819137 cumulative IPC: 0.549712 (Simulation time: 0 hr 0 min 12 sec) 
+
+Simulation complete CPU 0 instructions: 1000001 cycles: 1819137 (Simulation time: 0 hr 0 min 12 sec) 
+
+
+ChampSim completed all CPUs
+
+=== Simulation ===
+CPU 0 runs /home/neel/Desktop/assignments/architecture/Project/UCP_ISCA24/traces/compute_int_17.xz
+
+Region of Interest Statistics
+
+CPU 0 cumulative IPC: 0.549712 instructions: 1000001 cycles: 1819137
+CPU 0 Branch Prediction Accuracy: 95.4392% MPKI: 14.798 Average ROB Occupancy at Mispredict: 51.509
+MPKI 14.798 get_profiler_ptr->branch_mpki 14.798
+TOTAL_MISS: 14798 TOTAL_INSTR: 1.00001e+06
+Branch type MPKI
+BRANCH_DIRECT_JUMP: 0.545
+BRANCH_INDIRECT: 3.304
+BRANCH_CONDITIONAL: 9.57
+BRANCH_DIRECT_CALL: 0.491
+BRANCH_INDIRECT_CALL: 0.06
+BRANCH_RETURN: 0.828
+
+cpu0_L1I TOTAL       ACCESS:     128205  HIT:      63528  MISS:      64677
+cpu0_L1I LOAD         ACCESS:      64564  HIT:      35137  MISS:      29427
+cpu0_L1I RFO          ACCESS:          0  HIT:          0  MISS:          0
+cpu0_L1I PREFETCH     ACCESS:      63641  HIT:      28391  MISS:      35250
+cpu0_L1I WRITE        ACCESS:          0  HIT:          0  MISS:          0
+cpu0_L1I TRANSLATION  ACCESS:          0  HIT:          0  MISS:          0
+cpu0_L1I PREFETCH  REQUESTED:      64564  ISSUED:      64564  USEFUL:       9079  USELESS:       5180
+cpu0_L1I AVERAGE MISS LATENCY: 14.5752 cycles
+cpu0_ITLB TOTAL       ACCESS:     107988  HIT:      96056  MISS:      11932
+cpu0_ITLB LOAD         ACCESS:     107988  HIT:      96056  MISS:      11932
+cpu0_ITLB RFO          ACCESS:          0  HIT:          0  MISS:          0
+cpu0_ITLB PREFETCH     ACCESS:          0  HIT:          0  MISS:          0
+cpu0_ITLB WRITE        ACCESS:          0  HIT:          0  MISS:          0
+cpu0_ITLB TRANSLATION  ACCESS:          0  HIT:          0  MISS:          0
+cpu0_ITLB PREFETCH  REQUESTED:          0  ISSUED:          0  USEFUL:        101  USELESS:         14
+cpu0_ITLB AVERAGE MISS LATENCY: 14.7942 cycles
+cpu0_DTLB TOTAL       ACCESS:     271949  HIT:     257384  MISS:      14565
+cpu0_DTLB LOAD         ACCESS:     271949  HIT:     257384  MISS:      14565
+cpu0_DTLB RFO          ACCESS:          0  HIT:          0  MISS:          0
+cpu0_DTLB PREFETCH     ACCESS:          0  HIT:          0  MISS:          0
+cpu0_DTLB WRITE        ACCESS:          0  HIT:          0  MISS:          0
+cpu0_DTLB TRANSLATION  ACCESS:          0  HIT:          0  MISS:          0
+cpu0_DTLB PREFETCH  REQUESTED:          0  ISSUED:          0  USEFUL:          0  USELESS:          0
+cpu0_DTLB AVERAGE MISS LATENCY: 30.2955 cycles
+cpu0_STLB TOTAL       ACCESS:      12068  HIT:      10604  MISS:       1464
+cpu0_STLB LOAD         ACCESS:      12068  HIT:      10604  MISS:       1464
+cpu0_STLB RFO          ACCESS:          0  HIT:          0  MISS:          0
+cpu0_STLB PREFETCH     ACCESS:          0  HIT:          0  MISS:          0
+cpu0_STLB WRITE        ACCESS:          0  HIT:          0  MISS:          0
+cpu0_STLB TRANSLATION  ACCESS:          0  HIT:          0  MISS:          0
+cpu0_STLB PREFETCH  REQUESTED:          0  ISSUED:          0  USEFUL:          0  USELESS:          0
+cpu0_STLB AVERAGE MISS LATENCY: 356.33 cycles
+cpu0_L1D TOTAL       ACCESS:     288898  HIT:     261618  MISS:      27280
+cpu0_L1D LOAD         ACCESS:     171750  HIT:     156360  MISS:      15390
+cpu0_L1D RFO          ACCESS:          0  HIT:          0  MISS:          0
+cpu0_L1D PREFETCH     ACCESS:       3011  HIT:       1353  MISS:       1658
+cpu0_L1D WRITE        ACCESS:     112325  HIT:     103757  MISS:       8568
+cpu0_L1D TRANSLATION  ACCESS:       1812  HIT:        148  MISS:       1664
+cpu0_L1D PREFETCH  REQUESTED:       3423  ISSUED:       3392  USEFUL:        671  USELESS:         73
+cpu0_L1D AVERAGE MISS LATENCY: 47.1276 cycles
+cpu0_L2C TOTAL       ACCESS:      50539  HIT:      36894  MISS:      13645
+cpu0_L2C LOAD         ACCESS:      29134  HIT:      20424  MISS:       8710
+cpu0_L2C RFO          ACCESS:       1590  HIT:        772  MISS:        818
+cpu0_L2C PREFETCH     ACCESS:      15049  HIT:      12203  MISS:       2846
+cpu0_L2C WRITE        ACCESS:       3264  HIT:       3242  MISS:         22
+cpu0_L2C TRANSLATION  ACCESS:       1502  HIT:        253  MISS:       1249
+cpu0_L2C PREFETCH  REQUESTED:          0  ISSUED:          0  USEFUL:          0  USELESS:          0
+cpu0_L2C AVERAGE MISS LATENCY: 131.445 cycles
+LLC TOTAL       ACCESS:      14971  HIT:       3895  MISS:      11076
+LLC LOAD         ACCESS:       8641  HIT:       1613  MISS:       7028
+LLC RFO          ACCESS:        818  HIT:         72  MISS:        746
+LLC PREFETCH     ACCESS:       2843  HIT:        685  MISS:       2158
+LLC WRITE        ACCESS:       1420  HIT:       1420  MISS:          0
+LLC TRANSLATION  ACCESS:       1249  HIT:        105  MISS:       1144
+LLC PREFETCH  REQUESTED:          0  ISSUED:          0  USEFUL:          0  USELESS:          0
+LLC AVERAGE MISS LATENCY: 137.765 cycles
+
+DRAM Statistics
+Channel 0
+ RQ ROW_BUFFER_HIT:       3965
+  ROW_BUFFER_MISS:       7111
+ AVG DBUS CONGESTED CYCLE:    3.70627
+ WQ ROW_BUFFER_HIT:          0
+  ROW_BUFFER_MISS:          0  FULL:          0
+
+
+uop_cache_read: 999980
+uop_cache_hit: 569663
+UOP_CACHE_HIT: 56.9675
+L1I Hit Rate: 50.4482
+-------------------H2P stats----------------------------
+total_num_br: 0
+total_marked_as_h2p: 0
+total_h2p_miss: 0
+h2p_coverage: 0
+h2p_accuracy: -nan
+hit_misses: 0
+hit_predictions: 0
+hit_accuracy: -nan
+bimodal_accuracy: -nan
+H2P_THAT_MISS: -nan
+total alt path: 0
+indirect branches on alt path: 0
+Average indirect branches on alt path: -nan
+per of alt path with indrect br: -nan
+Total alt predictions done: 0
+total alt misses 0
+Accuracy on alt path  -nan
+isca_stats_first_br_miss_rate_BRANCH_DIRECT_JUMP: -nan
+isca_stats_first_br_miss_rate_BRANCH_INDIRECT: -nan
+isca_stats_first_br_miss_rate_BRANCH_CONDITIONAL: -nan
+isca_stats_first_br_miss_rate_BRANCH_DIRECT_CALL: -nan
+isca_stats_first_br_miss_rate_BRANCH_INDIRECT_CALL: -nan
+isca_stats_first_br_miss_rate_BRANCH_RETURN: -nan
+isca_stats_alt_bp_on_main_path_BRANCH_DIRECT_JUMP: 0.545
+isca_stats_alt_bp_on_main_path_BRANCH_INDIRECT: 3.304
+isca_stats_alt_bp_on_main_path_BRANCH_CONDITIONAL: 4.236
+isca_stats_alt_bp_on_main_path_BRANCH_DIRECT_CALL: 0.491
+isca_stats_alt_bp_on_main_path_BRANCH_INDIRECT_CALL: 0.06
+isca_stats_alt_bp_on_main_path_BRANCH_RETURN: 0.828
+============================ HPCA STATS ================================
+FTQ_stalled: 82318
+FTQ_stalled_mpki: 82.318
+total_pref_on_wrong_h2p_path: 0
+pref_used_on_wrong_path: 0
+wrong_pref_use: -nan
+h2p_per_kilo_instr: 0
+miss_br_pref_used 0
+window_pre 0
+================================ Prefetching stats ========================
+total_window_pref: 0
+pref_timely: -nan
+pref_late: -nan
+pref_early: -nan
+Prefetching Accuracy: -nan
+Prefetching Coverage: -nan
+Timely_prefetch_ip: 0
+Late_prefetch_ip: 0
+Early_prefetch_ip: 0
+Per_Timely_prefetch_ip: -nan
+Per_Late_prefetch_ip: -nan
+Per_Early_prefetch_ip: -nan
+hits_from_pref: 0
+accuracy_on_alt_path_preditions 0
+Misses on alternate path 0
+Miss rate on alternate path -nan%
+Total prefetch reach a branch 0
+Average number of correctly predicted branches -nan
+Total branches predicted: 0
+Total H2P generated: 0
+Average_num_of_br: -nan
+Miss distance after H2P -nan
+PREF_STATS_TABLE_MISSES: 44.2986
+PREF_STATS_TABLE_MISSES_COVERAGE: 0
+PREF_STATS_TABLE_MISSES_ACCURACY: -nan
+PREF_STATS_TABLE_MISSES_LATE: -nan
+PREF_STATS_TABLE_MISSES_EARLY: -nan
+PERCENTAGE_OF_BTB_CONFLICTS: -nan
+PERCENTAGE_OF_UOP_CACHE_CONFLICTS: -nan
+alt_path_stop_btb_miss -nan
+alt_path_stop_ind_branch -nan
+alt_path_stop_max_br -nan
+alt_path_stop_max_ip -nan
+alt_path_stop_no_target_other -nan
+alt_path_stop_no_target_ind -nan
+alt_path_stop_stop_at_sat_counter -nan
+alt_path_stop_stop_at_ip_limit_reached -nan
+tota_h2p_path 0
+correct_alt_stop_bp_wrong -nan
+correct_alt_stop_btb_wrong -nan
+correct_alt_stop_was_ind -nan
+only_cond_h2p_predictor_coverage: 0
+only_cond_h2p_predictor_accuracy: -nan
+Changed_by_SC: -nan
+avg_line_by_ideal_setting 0
+critical_uop_checks: 344733
+critical_uop_hits: 180423
+UopHit_rate_on_critial_path: 52.3371
+FTQ_HEAD_CRITICAL: 82.318
+SWITCH_STALLS_MPKI: 15.576
+pref_used_from_wrong_alt_path: -nan
+Avg_cache_lines_by_wrong_h2p: -nan
+Avg_cache_lines_by_correct_h2p: -nan
+ENERGY STATS
+dib_check 999980
+dib_hits 569663
+addr_gen_events 19101024
+addr_gen_events_alt 0
+rf_reads 1285934
+rf_writes 888990
+rob_writes 889292
+lq_writes 212979
+lq_searches 112199
+sq_writes 110027
+sq_searches 183609
+
+BTB CONFLICT STATS: 0
+DEMAND_DELAYED_DUE_TO_PREF_KI: 0
+DEMAND_BTB_CHECK_PER_CYCLE: 3.62361
+demand_decodes: 100
+pref_decodes: 0
+Eviction_of_demand: 100
+Eviction_of_pref_used: 0
+Eviction_of_pref_not_used: 0
+MRC_reads: 0
+MRC_hits: 0
+MRC_hit_rate: -nan
+MRC_already_in_uop_cache: -nan
+Average_instr_hits_MRC: -nan
+MRC_target_hit: -nan
+instr_till_first_uop_cache_miss_after_pipeline_resteer: 22.0586
+alt_stop_by_max_ip: -nan
+alt_stop_by_limit_ip: -nan
+alt_stop_by_btb_miss: -nan
+alt_stop_by_sat_counter: -nan
+conditional_br_alt_path: 0
+conditional_br_demand_path: 125181
+A_TAGE_VS_D_TAGE: 0

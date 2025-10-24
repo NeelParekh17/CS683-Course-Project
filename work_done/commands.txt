@@ -5,6 +5,6 @@ make clean
 
 make -j$(nproc)
 
-./bin/champsim --warmup_instructions 1000 --simulation_instructions 1000 /home/neel/Desktop/assignments/architecture/ChampSimTraces/trace1.champsimtrace.xz
+./bin/champsim --warmup_instructions 1000 --simulation_instructions 1000 /home/neel/Desktop/assignments/architecture/Project/UCP_ISCA24/traces/compute_fp_60.xz
 
-./bin/champsim --warmup_instructions 1000000 --simulation_instructions 1000000 /home/neel/Desktop/assignments/architecture/ChampSimTraces/compute_fp_1.champsim.gz
+./bin/champsim --warmup_instructions 1000000 --simulation_instructions 1000000 /home/neel/Desktop/assignments/architecture/Project/UCP_ISCA24/traces/compute_fp_60.xz
