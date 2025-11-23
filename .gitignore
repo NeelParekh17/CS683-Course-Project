@@ -17,10 +17,6 @@ champsim_author_code/
 *.xz
 *.o
 
-# Work outputs (plots, large CSVs)
-work_done/correlation_plots/
-work_done/*.csv
-
 # Misc
 .DS_Store
 *.swp
