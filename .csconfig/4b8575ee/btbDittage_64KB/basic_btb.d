@@ -1,0 +1,12 @@
+.csconfig/4b8575ee/btbDittage_64KB/basic_btb.o: \
+ btb/ittage_64KB/basic_btb.cc .csconfig/4b8575ee/inc/btbDittage_64KB.inc \
+ inc/ooo_cpu.h inc/alt_mpp.h inc/instruction.h inc/trace_instruction.h \
+ inc/champsim.h inc/operable.h \
+ .csconfig/4b8575ee/inc/champsim_constants.h inc/util.h inc/msl/bits.h \
+ inc/msl/lru_table.h inc/msl/bits.h inc/defines.h inc/defines.h inc/h2p.h \
+ inc/memory_class.h inc/util.h inc/profiler.h inc/json.h \
+ inc/way_associative.h inc/ooo_cpu.h inc/sat_counter.h \
+ .csconfig/4b8575ee/inc/ooo_cpu_modules.inc inc/target_table.h \
+ inc/alt_tage_8KB.h btb/ittage_64KB/basic_btb.h \
+ btb/ittage_64KB/branch_info.h btb/ittage_64KB/ittage_64KB.h \
+ inc/instruction.h btb/ittage_64KB/ras.h

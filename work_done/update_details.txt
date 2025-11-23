@@ -30,3 +30,5 @@ increment_alternate_path(): here what we do is merge prefetch request with uop_m
 add_to_uop_queue_ip(): create a new entry and push to ips_to_prefetch queue
 
 
+Change 2:
+evictlru_alternatepath(): We found last 4 lru entries, and then from them we remove the alternate path entries on lru basis. If no alternate path entry then we remove with nornal lru scheme.

@@ -1344,14 +1344,15 @@ void O3_CPU::do_init_instruction(ooo_model_instr &arch_instr)
     }
 
 #ifdef REAL_BRANCH_RECOVERY
-    if (arch_instr.hard_to_predict_branch)
-      printf("arch_instr.hard_to_predict_branch: %d  arch_instr.branch_type: %d\n",
-             arch_instr.hard_to_predict_branch,
-             arch_instr.branch_type);
+    // CHANGE: Logging h2p prefetcher info only for real branch recovery mode
+    // if (arch_instr.hard_to_predict_branch)
+    //   printf("arch_instr.hard_to_predict_branch: %d  arch_instr.branch_type: %d\n",
+    //          arch_instr.hard_to_predict_branch,
+    //          arch_instr.branch_type);
 
     if (arch_instr.hard_to_predict_branch && arch_instr.branch_type == BRANCH_CONDITIONAL)
     {
-      cout << "inside h2p prefetching" << endl;
+      // cout << "inside h2p prefetching" << endl;
       alt_path_has_indirect = false;
 
       get_profiler_ptr->hpca.total_h2p_tried++;
@@ -1720,7 +1721,7 @@ std::pair<uint64_t, uint8_t> O3_CPU::prefetch_alternate_path(uint64_t starting_i
                                                              bool branch_miss, ooo_model_instr &issuing_instr)
 {
   // cout << __func__ << endl;
-  cout << "Inside prefetch_alternate_path" << endl;
+  // cout << "Inside prefetch_alternate_path" << endl;
   if (issuing_instr.branch_type == BRANCH_CONDITIONAL)
   {
     alt_bp_predictor->UpdatePredictor(issuing_instr.ip, issuing_instr.branch_type, !issuing_instr.branch_prediction, issuing_instr.branch_target, false);
@@ -1867,9 +1868,9 @@ std::pair<uint64_t, uint8_t> O3_CPU::prefetch_alternate_path(uint64_t starting_i
       get_profiler_ptr->conditional_alt_path++;
     }
 
-    cout << "Calling add_to_uop_queue_ip: " << current_cycle << endl;
+    // cout << "Calling add_to_uop_queue_ip: " << current_cycle << endl;
     add_to_uop_queue_ip(m_ip, by_instr, reached_h2p, branch_miss, false, starting_ip, issuing_instr.branch_taken, is_br, m_prediction, br_type);
-    cout << "Called add_to_uop_queue_ip: " << current_cycle << endl;
+    // cout << "Called add_to_uop_queue_ip: " << current_cycle << endl;
     // if predicted branch then update the histories
     if (br_type == BRANCH_CONDITIONAL || br_type == BRANCH_DIRECT_CALL || br_type == BRANCH_DIRECT_JUMP || br_type == BRANCH_INDIRECT || br_type == BRANCH_INDIRECT_CALL || br_type == BRANCH_OTHER || br_type == BRANCH_RETURN)
     {
@@ -2069,7 +2070,7 @@ void O3_CPU::add_to_uop_queue_ip(uint64_t ip_to_pref, uint64_t by_instr, bool re
     // ADDED THIS: Mark as alternate path
     // as this is called from prefetch_alternate_path() only
     ip_to_add.is_alternate_path = true; // KEY LINE!
-    cout << "Marked alternate path for IP ";
+    // cout << "Marked alternate path for IP ";
     taken_br = false; // mark only the branch
     ips_to_prefetch.push_back(ip_to_add);
     last_pref_ip = ip_to_pref;

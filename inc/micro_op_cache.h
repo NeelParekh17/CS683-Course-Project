@@ -12,7 +12,7 @@
 #include "champsim_constants.h"
 #include "defines.h"
 #include "instruction.h"
-#include "memory_class.h" 
+#include "memory_class.h"
 #include "operable.h"
 #include "profiler.h"
 
@@ -22,7 +22,8 @@
 
 const int MAX_IPS_PER_WINDOW = SIZE_WINDOWS / 4; // remember to change it when the window changes
 
-struct uop_cache_entry_t {
+struct uop_cache_entry_t
+{
   uint64_t ip = 0;
   uint8_t hotness = 0;
   uint64_t last_used = 0;
@@ -43,7 +44,7 @@ struct uop_cache_entry_t {
   bool active = true;
 
   // ADDED THIS NEW FIELD:
-  bool alternate_path_prefetch = false;  // Set for branches predicted NOT TAKEN
+  bool alternate_path_prefetch = false; // Set for branches predicted NOT TAKEN //TO UPDATE
 };
 
 using uop_cache_t = std::vector<uop_cache_entry_t>;
@@ -65,10 +66,10 @@ public:
 
   void UpdateHotness()
   {
-    for_each(UOP.begin(), UOP.end(), [](uop_cache_entry_t& x) {
+    for_each(UOP.begin(), UOP.end(), [](uop_cache_entry_t &x)
+             {
       x.hotness--;
-      x.critical_hotness.decrement();
-    });
+      x.critical_hotness.decrement(); });
   }
 
   void Invalidate(uint64_t ip)
@@ -76,8 +77,10 @@ public:
     auto uop_set_begin = std::next(UOP.begin(), ((ip >> lg2(window)) % sets) * ways);
     auto uop_set_end = std::next(uop_set_begin, ways);
 
-    for (auto way = uop_set_begin; way != uop_set_end; ++way) {
-      if (getTag(ip) == getTag(way->ip)) {
+    for (auto way = uop_set_begin; way != uop_set_end; ++way)
+    {
+      if (getTag(ip) == getTag(way->ip))
+      {
         way->evict_on_demand = true;
       }
     }
@@ -87,7 +90,8 @@ public:
   {
     // if same window then return
     // the stats are calculated per window (cache line in a micro-op cache is same size as window)
-    if (ip >> lg2(window) == last_ip_to_check_dib >> lg2(window)) {
+    if (ip >> lg2(window) == last_ip_to_check_dib >> lg2(window))
+    {
       return;
     }
 
@@ -95,9 +99,12 @@ public:
     auto uop_set_begin = std::next(UOP.begin(), ((ip >> lg2(window)) % sets) * ways);
     auto uop_set_end = std::next(uop_set_begin, ways);
     bool hit = false;
-    for (auto way = uop_set_begin; way != uop_set_end; ++way) {
-      if (getTag(ip) == getTag(way->ip)) {
-        if (way->pref) {
+    for (auto way = uop_set_begin; way != uop_set_end; ++way)
+    {
+      if (getTag(ip) == getTag(way->ip))
+      {
+        if (way->pref)
+        {
           is_prefetched = true;
         }
         way->pref = false;
@@ -105,16 +112,20 @@ public:
     }
 
     get_profiler_ptr->stats_table[((ip >> lg2(window)) & STATS_TABLE_MASK)].accesses++;
-    if (!dib_hit) {
+    if (!dib_hit)
+    {
       get_profiler_ptr->stats_table[((ip >> lg2(window)) & STATS_TABLE_MASK)].misses++;
-      if (in_mshr && !pref_completed) {
+      if (in_mshr && !pref_completed)
+      {
         get_profiler_ptr->stats_table[((ip >> lg2(window)) & STATS_TABLE_MASK)].late++;
       }
-      if (!in_mshr && recently_pref) {
+      if (!in_mshr && recently_pref)
+      {
         get_profiler_ptr->stats_table[((ip >> lg2(window)) & STATS_TABLE_MASK)].early++;
       }
     }
-    if (dib_hit && is_prefetched) {
+    if (dib_hit && is_prefetched)
+    {
       get_profiler_ptr->stats_table[((ip >> lg2(window)) & STATS_TABLE_MASK)].hits++;
     }
 
@@ -126,8 +137,10 @@ public:
     auto uop_set_begin = std::next(UOP.begin(), ((ip >> lg2(window)) % sets) * ways);
     auto uop_set_end = std::next(uop_set_begin, ways);
     bool hit = false;
-    for (auto way = uop_set_begin; way != uop_set_end; ++way) {
-      if (getTag(ip) == getTag(way->ip)) {
+    for (auto way = uop_set_begin; way != uop_set_end; ++way)
+    {
+      if (getTag(ip) == getTag(way->ip))
+      {
         hit = true;
       }
     }
@@ -139,26 +152,33 @@ public:
     auto uop_set_begin = std::next(UOP.begin(), ((ip >> lg2(window)) % sets) * ways);
     auto uop_set_end = std::next(uop_set_begin, ways);
     bool hit = false;
-    for (auto way = uop_set_begin; way != uop_set_end; ++way) {
-      if (getTag(ip) == getTag(way->ip)) {
+    for (auto way = uop_set_begin; way != uop_set_end; ++way)
+    {
+      if (getTag(ip) == getTag(way->ip))
+      {
         hit = true;
         // ADDED THIS: Reset alternate path bit on access
-        if (way->alternate_path_prefetch) {
-          way->alternate_path_prefetch = false;  // RESET ON ACCESS
-          
+        if (way->alternate_path_prefetch)
+        {
+          way->alternate_path_prefetch = false; // RESET ON ACCESS
+
           // Optional: Track statistics
           // get_profiler_ptr->uop_pref_stats.alternate_path_useful++;
         }
-        if (way->is_critical) {
+        if (way->is_critical)
+        {
           way->critical_hotness.increment();
         }
-        if (way->pref && !way->used_once) {
+        if (way->pref && !way->used_once)
+        {
           way->used_once = true;
-          if (way->was_from_miss_br) {
+          if (way->was_from_miss_br)
+          {
             get_profiler_ptr->hpca.br_miss_used++;
           }
         }
-        if (way->last_used != current_cycle) {
+        if (way->last_used != current_cycle)
+        {
           way->hotness++;
           way->last_used = current_cycle;
         }
@@ -178,23 +198,27 @@ public:
     bool tag_found = false;
     bool ip_found = false;
 
-    for (auto way = uop_set_begin; way != uop_set_end; ++way) {
+    for (auto way = uop_set_begin; way != uop_set_end; ++way)
+    {
       // check for the termination condition here
       // we check with the window granularity these termination conditions are here to simulate evictions
 
       // if we want to add in a entry and it is active (meaning it is not terminated yet) then check for termination conditions
-      if (getTag(ip) == getTag(way->ip) && way->active && (way->terminated_by_taken || way->num_br == 2)) {
+      if (getTag(ip) == getTag(way->ip) && way->active && (way->terminated_by_taken || way->num_br == 2))
+      {
         //  the termination by taken branch should keep the taken branch and then allocate the next up coming entries to new entry
 
         // for termination by JUMP we could assume that the next instruction will map to the new line as it's a jump
         // but it is possible that the JUMP might be over a very small distance like 1 or instruction, in such case
         // the entry might map to the old entry so the condition below can be useful.
 
-        if (way->terminated_by_taken) { // if it is still ended by taken branch then allocate a new entry
+        if (way->terminated_by_taken)
+        { // if it is still ended by taken branch then allocate a new entry
           way->active = false;
         }
 
-        if (way->num_br == 2) {
+        if (way->num_br == 2)
+        {
           way->active = false;
         }
       }
@@ -203,20 +227,24 @@ public:
       // if it is terminated we need to rest it
       // if the entry is terminated by 2 branches it will be rest at evictions
       // mostly taken branches will map to another entry anyways
-      if (getTag(ip) == getTag(way->ip) && !way->active && way->num_br < 2 && !taken_end) {
+      if (getTag(ip) == getTag(way->ip) && !way->active && way->num_br < 2 && !taken_end)
+      {
         // the branch is not taken this time so activate the entry
         way->active = true;
       }
     }
 
-    for (auto way = uop_set_begin; way != uop_set_end; ++way) {
-      if (getTag(ip) == getTag(way->ip) && way->active) {
+    for (auto way = uop_set_begin; way != uop_set_end; ++way)
+    {
+      if (getTag(ip) == getTag(way->ip) && way->active)
+      {
 
         // update if this entry should be terminated by the predicted taken branch.
         way->terminated_by_taken = taken_end;
 
         // update the total number of branches in this entry
-        if (is_branch) {
+        if (is_branch)
+        {
           way->num_br++;
           assert(way->num_br <= 2); // each way can have max 2 branches
         }
@@ -226,29 +254,33 @@ public:
         if (critical)
           way->is_critical = critical;
 
-        if (way->last_used != current_cycle) {
+        if (way->last_used != current_cycle)
+        {
           way->hotness++;
           way->last_used = current_cycle;
           way->critical_hotness.increment();
         }
         // if not already pref mark pref
-        if (!way->pref && pref) {
+        if (!way->pref && pref)
+        {
           way->pref = pref;
           get_profiler_ptr->uop_pref_stats.window_prefetched++;
         }
         way->was_from_miss_br = was_br_miss;
         way->permanent_pref_flag = pref;
 
-        // ADDED THIS: Set alternate path bit 
-        if (pref && is_alternate_path) {
+        // ADDED THIS: Set alternate path bit
+        if (pref && is_alternate_path)
+        {
           way->alternate_path_prefetch = true;
           // way->last_used=0; // to increase hotness faster
         }
-        break;  
+        break;
       }
     }
 
-    if (!tag_found) {
+    if (!tag_found)
+    {
       auto victim = uop_set_begin;
 #ifdef UOP_CACHE_LRU_RP
       // victim = EvictLRU(uop_set_begin, uop_set_end);
@@ -266,29 +298,38 @@ public:
       victim = EvictHotloopCritical(uop_set_begin, uop_set_end, critical);
 #endif
 
-      if (victim->pref) {
-        if (victim->used_once) {
+      if (victim->pref)
+      {
+        if (victim->used_once)
+        {
           get_profiler_ptr->m_eviction_stats.by_pref_used++;
-        } else {
+        }
+        else
+        {
           get_profiler_ptr->m_eviction_stats.by_pref_not_used++;
         }
-      } else {
+      }
+      else
+      {
         get_profiler_ptr->m_eviction_stats.by_demand++;
       }
 
       // prefetch that were on the not the alternate path but is used
-      if (!victim->stats_already_counted) {
+      if (!victim->stats_already_counted)
+      {
         victim->stats_already_counted = true;
 
         // reuse even on wrong path
-        if (victim->on_wrong_h2p_path) {
+        if (victim->on_wrong_h2p_path)
+        {
           get_profiler_ptr->hpca.total_wrong_pref++;
           if (victim->used_once)
             get_profiler_ptr->hpca.wrong_uop_pref_used++;
         }
       }
 
-      if (victim->is_critical) {
+      if (victim->is_critical)
+      {
         get_profiler_ptr->victim_critical_ways++;
         if (victim->used_once)
           get_profiler_ptr->victim_critical_ways_used++;
@@ -312,7 +353,8 @@ public:
       // ADDED THIS: Set alternate path bit for new entry
       victim->alternate_path_prefetch = (pref && is_alternate_path);
 
-      if (pref) {
+      if (pref)
+      {
         get_profiler_ptr->uop_pref_stats.window_prefetched++;
       }
     }
@@ -320,11 +362,14 @@ public:
 
   void invalidateEntries(std::vector<uint64_t> ips, uint64_t by_instr)
   {
-    for (auto& ip : ips) {
+    for (auto &ip : ips)
+    {
       auto uop_set_begin = std::next(UOP.begin(), ((ip >> lg2(window)) % sets) * ways);
       auto uop_set_end = std::next(uop_set_begin, ways);
-      for (auto way = uop_set_begin; way != uop_set_end; ++way) {
-        if ((getTag(ip) == getTag(way->ip)) && way->pref) { // only invalidate the prefetched ways
+      for (auto way = uop_set_begin; way != uop_set_end; ++way)
+      {
+        if ((getTag(ip) == getTag(way->ip)) && way->pref)
+        { // only invalidate the prefetched ways
           way->is_valid = false;
         }
       }
@@ -352,8 +397,10 @@ public:
 
     bool tag_found = false;
 
-    for (auto way = uop_set_begin; way != uop_set_end; ++way) {
-      if (getTag(ip) == getTag(way->ip)) {
+    for (auto way = uop_set_begin; way != uop_set_end; ++way)
+    {
+      if (getTag(ip) == getTag(way->ip))
+      {
         return way->permanent_pref_flag;
       }
     }
@@ -373,54 +420,95 @@ private:
 
   uop_cache_t::iterator SmartLRU(uop_cache_t::iterator begin, uop_cache_t::iterator end)
   {
-    for (auto it = begin; it != end; ++it) {
-      if (!it->is_valid) {
+    for (auto it = begin; it != end; ++it)
+    {
+      if (!it->is_valid)
+      {
         return it;
       }
     }
 
-    return std::min_element(begin, end, [](uop_cache_entry_t& a, uop_cache_entry_t& b) { return a.last_used < b.last_used; });
+    return std::min_element(begin, end, [](uop_cache_entry_t &a, uop_cache_entry_t &b)
+                            { return a.last_used < b.last_used; });
   }
 
   uop_cache_t::iterator EvictLRU(uop_cache_t::iterator begin, uop_cache_t::iterator end)
   {
-    return std::min_element(begin, end, [](uop_cache_entry_t& a, uop_cache_entry_t& b) { return a.last_used < b.last_used; });
+    return std::min_element(begin, end, [](uop_cache_entry_t &a, uop_cache_entry_t &b)
+                            { return a.last_used < b.last_used; });
   }
 
   // ADDED: LRU with alternate path priority
+  // uop_cache_t::iterator EvictLRU_AlternatePath(uop_cache_t::iterator begin, uop_cache_t::iterator end)
+  // {
+    // Check if any alternate path prefetch entries exist in this set
+  //   bool has_alternate_path = std::any_of(begin, end,
+  //     [](const uop_cache_entry_t& entry) {
+  //       return entry.alternate_path_prefetch;
+  //     });
+
+  //   // Find victim: prioritize alternate path entries, then use LRU within category
+  //   return std::min_element(begin, end,
+  //     [has_alternate_path](const uop_cache_entry_t& a, const uop_cache_entry_t& b) {
+  //       // If alternate path entries exist in this set
+  //       if (has_alternate_path) {
+  //         // Prioritize evicting alternate path entries
+  //         if (a.alternate_path_prefetch != b.alternate_path_prefetch) {
+  //           return a.alternate_path_prefetch;  // Evict 'a' if it has alternate bit
+  //         }
+  //       }
+        // Among same category (both alternate or both regular), use LRU
+  //       return a.last_used < b.last_used;
+  //     });
+  // }
   uop_cache_t::iterator EvictLRU_AlternatePath(uop_cache_t::iterator begin, uop_cache_t::iterator end)
   {
-    // Check if any alternate path prefetch entries exist in this set
-    bool has_alternate_path = std::any_of(begin, end, 
-      [](const uop_cache_entry_t& entry) { 
-        return entry.alternate_path_prefetch; 
-      });
+    std::vector<std::pair<uop_cache_t::iterator, uint64_t>> entries;
 
-    // Find victim: prioritize alternate path entries, then use LRU within category
-    return std::min_element(begin, end, 
-      [has_alternate_path](const uop_cache_entry_t& a, const uop_cache_entry_t& b) {
-        // If alternate path entries exist in this set
-        if (has_alternate_path) {
-          // Prioritize evicting alternate path entries
-          if (a.alternate_path_prefetch != b.alternate_path_prefetch) {
-            return a.alternate_path_prefetch;  // Evict 'a' if it has alternate bit
-          }
-        }
-        // Among same category (both alternate or both regular), use LRU
-        return a.last_used < b.last_used;
-      });
+    // Collect all entries with their last_used values
+    for (auto it = begin; it != end; ++it)
+    {
+      entries.push_back({it, it->last_used});
+    }
+
+    // Sort by last_used to find LRU-4
+    std::sort(entries.begin(), entries.end(),
+              [](const auto &a, const auto &b)
+              {
+                return a.second < b.second;
+              });
+
+    // Only consider the 4 least recently used entries
+    auto lru4_end = entries.begin() + std::min(4UL, entries.size());
+
+    // Among LRU-4, prioritize alternate path entries, then use LRU
+    auto victim = std::min_element(entries.begin(), lru4_end,
+                                   [](const auto &a, const auto &b)
+                                   {
+                                     // First priority: alternate path entries
+                                     if (a.first->alternate_path_prefetch != b.first->alternate_path_prefetch)
+                                     {
+                                       return a.first->alternate_path_prefetch;
+                                     }
+                                     // Second priority: LRU within same category
+                                     return a.second < b.second;
+                                   });
+
+    return victim->first;
   }
-  
+
   uop_cache_t::iterator Hotloop(uop_cache_t::iterator begin, uop_cache_t::iterator end)
   {
-    return std::min_element(begin, end, [](uop_cache_entry_t& a, uop_cache_entry_t& b) { return a.hotness < b.hotness; });
+    return std::min_element(begin, end, [](uop_cache_entry_t &a, uop_cache_entry_t &b)
+                            { return a.hotness < b.hotness; });
   }
 
   uop_cache_t::iterator EvictLRUHotness(uop_cache_t::iterator begin, uop_cache_t::iterator end)
   {
     std::vector<uint64_t> last_used_vector;
 
-    for (auto it = begin; it != end; ++it) {
+    for (auto it = begin; it != end; ++it)
+    {
       last_used_vector.push_back((*it).last_used);
     }
 
@@ -431,9 +519,12 @@ private:
 
     auto victim = begin;
 
-    for (auto it = begin; it != end; ++it) {
-      for (auto& x : least_4) {
-        if ((*it).last_used == x && (*it).hotness < (*victim).hotness) {
+    for (auto it = begin; it != end; ++it)
+    {
+      for (auto &x : least_4)
+      {
+        if ((*it).last_used == x && (*it).hotness < (*victim).hotness)
+        {
           victim = it;
         }
       }
@@ -447,7 +538,8 @@ private:
   uop_cache_t::iterator EvictLRUCritical(uop_cache_t::iterator begin, uop_cache_t::iterator end, bool critical)
   {
     std::vector<uop_cache_entry_t> set_vec;
-    for (auto it = begin; it != end; ++it) {
+    for (auto it = begin; it != end; ++it)
+    {
       set_vec.push_back(*it);
     }
     assert(set_vec.size() == ways);
@@ -455,62 +547,76 @@ private:
     std::vector<uop_cache_entry_t> least_4(set_vec.begin(), set_vec.begin() + 4);
 
     // try to remove least 4 lru which is not critical
-    for (auto x = least_4.begin(); x != least_4.end(); ++x) {
-      for (auto it = begin; it != end; ++it) {
-        if ((x->ip == it->ip && x->last_used == it->last_used && !it->is_critical)) {
+    for (auto x = least_4.begin(); x != least_4.end(); ++x)
+    {
+      for (auto it = begin; it != end; ++it)
+      {
+        if ((x->ip == it->ip && x->last_used == it->last_used && !it->is_critical))
+        {
           return it;
         }
       }
     }
 
     // if above does not find any way try to remove any lru with no confident
-    for (auto x = set_vec.begin(); x != set_vec.end(); ++x) {
-      for (auto it = begin; it != end; ++it) {
-        if ((x->ip == it->ip && x->last_used == it->last_used && it->is_critical && !it->critical_hotness.confident())) {
+    for (auto x = set_vec.begin(); x != set_vec.end(); ++x)
+    {
+      for (auto it = begin; it != end; ++it)
+      {
+        if ((x->ip == it->ip && x->last_used == it->last_used && it->is_critical && !it->critical_hotness.confident()))
+        {
           return it;
         }
       }
     }
 
     // if all fails remove the lru
-    return std::min_element(begin, end, [](uop_cache_entry_t& a, uop_cache_entry_t& b) { return a.last_used < b.last_used; });
+    return std::min_element(begin, end, [](uop_cache_entry_t &a, uop_cache_entry_t &b)
+                            { return a.last_used < b.last_used; });
   }
 
   uop_cache_t::iterator EvictHotloopCritical(uop_cache_t::iterator begin, uop_cache_t::iterator end, bool critical)
   {
     std::vector<uop_cache_entry_t> set_vec;
-    for (auto it = begin; it != end; ++it) {
+    for (auto it = begin; it != end; ++it)
+    {
       set_vec.push_back(*it);
     }
     assert(set_vec.size() == ways);
     std::sort(set_vec.begin(), set_vec.end(), compare_hotness);
     std::vector<uop_cache_entry_t> least_4(set_vec.begin(), set_vec.begin() + 4);
 
-    for (auto x = least_4.begin(); x != least_4.end(); ++x) {
-      for (auto it = begin; it != end; ++it) {
+    for (auto x = least_4.begin(); x != least_4.end(); ++x)
+    {
+      for (auto it = begin; it != end; ++it)
+      {
         if (x->ip == it->ip && x->hotness == it->hotness && !it->is_critical)
           return it;
       }
     }
 
-    for (auto x = set_vec.begin(); x != set_vec.end(); ++x) {
-      for (auto it = begin; it != end; ++it) {
-        if ((x->ip == it->ip && x->hotness == it->hotness && it->is_critical && !it->critical_hotness.confident())) {
+    for (auto x = set_vec.begin(); x != set_vec.end(); ++x)
+    {
+      for (auto it = begin; it != end; ++it)
+      {
+        if ((x->ip == it->ip && x->hotness == it->hotness && it->is_critical && !it->critical_hotness.confident()))
+        {
           return it;
         }
       }
     }
 
-    return std::min_element(begin, end, [](uop_cache_entry_t& a, uop_cache_entry_t& b) { return a.hotness < b.hotness; });
+    return std::min_element(begin, end, [](uop_cache_entry_t &a, uop_cache_entry_t &b)
+                            { return a.hotness < b.hotness; });
   }
 
-  static bool compare_lru(uop_cache_entry_t& a, uop_cache_entry_t& b) { return a.last_used < b.last_used; }
+  static bool compare_lru(uop_cache_entry_t &a, uop_cache_entry_t &b) { return a.last_used < b.last_used; }
 
-  static bool compare_hotness(uop_cache_entry_t& a, uop_cache_entry_t& b) { return a.hotness < b.hotness; }
+  static bool compare_hotness(uop_cache_entry_t &a, uop_cache_entry_t &b) { return a.hotness < b.hotness; }
 
   uint64_t getTag(uint64_t ip) { return (ip >> lg2(window)); }
 };
 
-inline MicroOpCache* m_microop_cache_ptr = new MicroOpCache();
+inline MicroOpCache *m_microop_cache_ptr = new MicroOpCache();
 
 #endif // MICROOPCACHE

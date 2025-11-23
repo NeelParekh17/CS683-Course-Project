@@ -1,0 +1,27 @@
+# Ignore upstream/third-party embedded repo
+
+# Build artifacts and binaries
+bin/
+obj/
+.csconfig/
+
+# Generated configs and outputs
+generated_configs/
+results/
+traces/
+
+# Embedded third-party code (keep as a submodule or external)
+champsim_author_code/
+
+# Large archives and object files
+*.xz
+*.o
+
+# Work outputs (plots, large CSVs)
+work_done/correlation_plots/
+work_done/*.csv
+
+# Misc
+.DS_Store
+*.swp
+champsim_author_code/

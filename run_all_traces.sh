@@ -1,43 +1,34 @@
 #!/bin/bash
 
-# Paths
-BIN_PATH="./bin/champsim"
+BIN_PATH="./bin/UCP"
 TRACE_DIR="/home/neel/Desktop/assignments/architecture/Project/UCP_ISCA24/traces"
-RESULTS_DIR="/home/neel/Desktop/assignments/architecture/Project/UCP_ISCA24/results"
+RESULTS_DIR="/home/neel/Desktop/assignments/architecture/Project/change_results_eviction_policy_updated2"
 
-# Parameters
-WARMUP=1000000
-SIM=1000000
-MAX_PARALLEL=8
+WARMUP=50000000
+SIM=50000000
+MAX_PARALLEL=16
 
-# Create results directory if not exists
 mkdir -p "$RESULTS_DIR"
 
-# Counter to limit parallel jobs
-count=0
-
 # Loop through all .xz traces
-for trace in "$TRACE_DIR"/*.xz; do
+for trace in "$TRACE_DIR"/srv*.xz; do
     trace_name=$(basename "$trace" .xz)
     out_file="$RESULTS_DIR/${trace_name}.txt"
 
-    echo "Running trace: $trace_name"
+    echo "Starting trace: $trace_name"
 
-    # Run Champsim in background and redirect output
+    # Launch simulation in background
     "$BIN_PATH" \
         --warmup_instructions "$WARMUP" \
         --simulation_instructions "$SIM" \
         "$trace" > "$out_file" 2>&1 &
 
-    ((count++))
-
-    # Wait if 8 parallel jobs are already running
-    if (( count % MAX_PARALLEL == 0 )); then
-        wait
-    fi
+    # If running jobs >= MAX_PARALLEL, wait for one to finish before launching another
+    while (( $(jobs -r | wc -l) >= MAX_PARALLEL )); do
+        sleep 120  # check every 120 seconds
+    done
 done
 
-# Wait for remaining jobs
+# Wait for all remaining jobs to finish
 wait
-
 echo "All traces completed."
